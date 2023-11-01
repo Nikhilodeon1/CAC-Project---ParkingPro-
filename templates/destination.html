@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+<head>
+        <title>PARKINGPRO</title>
+        <meta charset="utf-8" />
+    <meta http-equiv="refresh" content="300">
+
+        <script type='text/javascript'>
+                function GetMap() {
+                        //Create a map instance.
+                        var map = new Microsoft.Maps.Map('#myMap', {
+                                credentials: 'AldazXMMRfAD8Jg5w-XqpXM7wFjNP1poTOP52Q8LViFaRiqPofN2e8wWgonN0SHu',
+                            mapTypeId: Microsoft.Maps.MapTypeId.canvasDark
+                        });
+                    
+                        //Request the user's location
+                        navigator.geolocation.getCurrentPosition(function (position) {
+                            var loc = new Microsoft.Maps.Location(
+                                position.coords.latitude,
+                                position.coords.longitude);
+                            console.log(loc)
+                            //Add a pushpin at the user's location.
+                            var pin = new Microsoft.Maps.Pushpin(loc);
+                            map.entities.push(pin);
+                        });
+
+                        //Create a pushpin at a location.
+                        var location = new Microsoft.Maps.Location({{ lat }}, {{ long }});
+                        var pin2 = new Microsoft.Maps.Pushpin(location, {
+                                //Use a custom image as the pushpin icon.
+                                icon: 'https://i.postimg.cc/PqTh41wG/Untitled-design-4-removebg-preview-1.png'
+                        });
+                        map.entities.push(pin2);
+
+
+                    var locs = [loc, location]
+                    var rect = Microsoft.Maps.LocationRect.fromLocations(locs);
+                    //Set the map view to center on the bounding box and add some padding
+                    map.setView( { bounds: rect, padding: -10, zoom:18 });
+            }
+        </script>
+        <script type='text/javascript' src='https://www.bing.com/api/maps/mapcontrol?callback=GetMap' async defer></script>
+        <style>
+#overlay1 {
+    position: fixed;
+    width: 100%;
+    height: 20%;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 2;
+    cursor: pointer;
+}
+
+            #overlay2 {
+                position: fixed;
+                width: 100%;
+                height: 10%;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background-color:#0066ff;
+                z-index: 7;
+                cursor: pointer;
+            }
+
+.text{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    font-size: 155%;
+    color: white;
+    transform: translate(-50%,-50%);
+    -ms-transform: translate(-50%,-50%);
+}
+            body{
+                padding:none;
+                margin:none;
+                border:none;
+                background:#0066ff;
+                font-family: Arial, Helvetica, sans-serif;
+            }
+</style>
+</head>
+<body>
+
+<form id="form1" action="/p" method="POST">
+    <input id="inp1" name='lat' type="text" style="display:none" placeholder="b">
+    <input id="inp2" name='long' type="text" style="display:none" placeholder="b">
+</form>
+    
+    <div id="overlay2" onclick="off()">
+        <div class="text"><b>Parking Pro</b></div>
+    </div>
+  <div id="overlay1" onclick="off()">
+    <div class="text"><br><a href="/delsession"><button style="background:#ffcc00; padding: 5px; border:none;border-radius: 5px"><b>I Found My Car</b></button></a></div>
+  </div>
+  <div id="myMap" style="position:relative;width:100%"></div>
+</body>
+
+</html>
