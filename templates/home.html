@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+<head>
+        <title>PARKINGPRO</title>
+        <meta charset="utf-8" />
+    <meta http-equiv="refresh" content="300">
+
+        <script type='text/javascript'>
+                function GetMap() {
+                        //Create a map instance.
+                        var map = new Microsoft.Maps.Map('#myMap', {
+                                credentials: 'AldazXMMRfAD8Jg5w-XqpXM7wFjNP1poTOP52Q8LViFaRiqPofN2e8wWgonN0SHu',
+                            mapTypeId: Microsoft.Maps.MapTypeId.canvasDark
+                        });
+                    
+                        //Request the user's location
+                        navigator.geolocation.getCurrentPosition(function (position) {
+                            var loc = new Microsoft.Maps.Location(
+                                position.coords.latitude,
+                                position.coords.longitude);
+                            console.log(loc)
+                            //Add a pushpin at the user's location.
+                            var pin = new Microsoft.Maps.Pushpin(loc);
+                            map.entities.push(pin);
+                        });
+                    var locs = [loc]
+                    var rect = Microsoft.Maps.LocationRect.fromLocations(locs);
+                    //Set the map view to center on the bounding box and add some padding
+                    map.setView( { bounds: rect, padding: -10, zoom:18 });
+            }
+        </script>
+        <script type='text/javascript' src='https://www.bing.com/api/maps/mapcontrol?callback=GetMap' async defer></script>
+        <style>
+
+            #overlay2 {
+                position: fixed;
+                width: 100%;
+                height: 10%;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background-color:#0066ff;
+                z-index: 7;
+                cursor: pointer;
+            }
+
+.text{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    font-size: 155%;
+    color: white;
+    transform: translate(-50%,-50%);
+    -ms-transform: translate(-50%,-50%);
+}
+            body{
+                padding:none;
+                margin:none;
+                border:none;
+                background:#0066ff;
+                font-family: Arial, Helvetica, sans-serif;
+            }
+</style>
+</head>
+<body>
+
+<form id="form1" action="/p" method="POST">
+    <input id="inp1" name='lat' type="text" style="display:none" placeholder="b">
+    <input id="inp2" name='long' type="text" style="display:none" placeholder="b">
+</form>
+    
+    <div id="overlay2" onclick="off()">
+        <div class="text"><b>Parking Pro</b></div>
+    </div>
+        <div id="myMap" style="position:relative;width:100%"></div>
+</body>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script>
+    setInterval(function() {
+            window.location.reload();
+    }, 60_000); // in ms
+
+    var initlat = 0.0
+    var initlong = 0.0
+    navigator.geolocation.getCurrentPosition(showPosition);
+    function showPosition(position) {
+        initlat = position.coords.latitude
+        initlong = position.coords.longitude
+    }
+    
+    //while (true) {
+      setInterval(function() {
+        navigator.geolocation.getCurrentPosition(showPosition)
+        function showPosition(position) {
+          if (Math.abs(position.coords.latitude - initlat) >0.003 || Math.abs(position.coords.longitude - initlong) >0.003) {
+            console.log('nothing')
+          } else {
+            console.log(document.getElementById('inp2').value)
+            document.getElementById('inp1').value = position.coords.latitude
+            document.getElementById('inp2').value = position.coords.longitude
+            $("#form1").submit()
+          }
+        }
+      }, 10_000)
+    //}
+</script>
+</html>
